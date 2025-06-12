@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tiket Kereta - Multi Slide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    .slide {
+      display: none;
+      padding: 40px;
+      background-color: white;
+      margin: 20px auto;
+      max-width: 700px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .nav-buttons {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tombol Navigasi -->
+  <div class="nav-buttons">
+    <button onclick="showSlide(0)">Jam Keberangkatan</button>
+    <button onclick="showSlide(1)">Pembelian Tiket</button>
+    <button onclick="showSlide(2)">Data Tiket</button>
+  </div>
+
+  <!-- Slide 0: Jam Keberangkatan -->
+  <div class="slide" id="slide0">
+    <h2>Jam Keberangkatan Kereta</h2>
+    <form id="formJam">
+      <label for="stasiunAsal">Stasiun Asal:</label>
+      <select id="stasiunAsal" required>
+        <option value="">-- Pilih Stasiun Asal --</option>
+        <option value="Jakarta">Jakarta</option>
+        <option value="Bandung">Bandung</option>
+        <option value="Surabaya">Surabaya</option>
+        <option value="Yogyakarta">Yogyakarta</option>
+      </select>
+
+      <label for="stasiunTujuan">Stasiun Tujuan:</label>
+      <select id="stasiunTujuan" required>
+        <option value="">-- Pilih Stasiun Tujuan --</option>
+        <option value="Jakarta">Jakarta</option>
+        <option value="Bandung">Bandung</option>
+        <option value="Surabaya">Surabaya</option>
+        <option value="Yogyakarta">Yogyakarta</option>
+      </select>
+
+      <label for="tanggalKeberangkatan">Tanggal Keberangkatan:</label>
+      <input type="date" id="tanggalKeberangkatan" required />
+
+      <button type="submit">Cari Jadwal</button>
+    </form>
+
+    <h3 style="margin-top: 30px;">Jadwal Keberangkatan</h3>
+    <table id="tabelJadwal">
+      <thead>
+        <tr>
+          <th>Kereta</th>
+          <th>Keberangkatan</th>
+          <th>Tiba</th>
+          <th>Durasi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Jadwal akan muncul di sini -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Slide 1: Form Pembelian Tiket -->
+  <div class="slide" id="slide1">
+    <h2>Form Pembelian Tiket</h2>
+    <form id="formTiket">
+      <label for="nama">Nama Penumpang:</label>
+      <input type="text" id="nama" required />
+
+      <label for="rute">Rute Perjalanan:</label>
+      <select id="rute">
+        <option value="Jakarta - Bandung">Jakarta - Bandung</option>
+        <option value="Surabaya - Yogyakarta">Surabaya - Yogyakarta</option>
+        <option value="Jakarta - Surabaya">Jakarta - Surabaya</option>
+        <option value="Yogyakarta - Bandung">Yogyakarta - Bandung</option>
+      </select>
+
+      <label for="kelas">Kelas Kereta:</label>
+      <select id="kelas">
+        <option value="Ekonomi">Ekonomi</option>
+        <option value="Bisnis">Bisnis</option>
+        <option value="Eksekutif">Eksekutif</option>
+      </select>
+
+      <label for="jumlah">Jumlah Tiket:</label>
+      <input type="number" id="jumlah" min="1" required />
+
+      <label for="tanggal">Tanggal Berangkat:</label>
+      <input type="date" id="tanggal" required />
+
+      <button type="submit">Simpan Tiket</button>
+    </form>
+  </div>
+
+  <!-- Slide 2: Tampilan Data Tiket -->
+  <div class="slide" id="slide2">
+    <h2>Data Pembelian Tiket</h2>
+    <table id="tabelTiket">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Rute</th>
+          <th>Kelas</th>
+          <th>Jumlah Tiket</th>
+          <th>Tanggal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data tiket akan ditambahkan di sini -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.display = i === index ? 'block' : 'none';
+      });
+      currentSlide = index;
+    }
+
+    // Tampilkan slide pertama saat halaman dimuat
+    showSlide(currentSlide);
+
+    // Fungsi pencarian jadwal (simulasi)
+    document.getElementById('formJam').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const asal = document.getElementById('stasiunAsal').value;
+      const tujuan = document.getElementById('stasiunTujuan').value;
+      const tanggal = document.getElementById('tanggalKeberangkatan').value;
+
+      if (asal && tujuan && tanggal) {
+        const tbody = document.querySelector('#tabelJadwal tbody');
+        tbody.innerHTML = `
+          <tr><td>Kereta Api Argo Bromo</td><td>08:00</td><td>13:00</td><td>5 jam</td></tr>
+          <tr><td>Kereta Api Gajayana</td><td>10:30</td><td>15:30</td><td>5 jam</td></tr>
+          <tr><td>Kereta Api Taksaka</td><td>15:00</td><td>20:00</td><td>5 jam</td></tr>
+        `;
+      } else {
+        alert("Silakan lengkapi semua field!");
+      }
+    });
+
+    // Simpan data tiket ke tabel
+    document.getElementById('formTiket').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nama = document.getElementById('nama').value;
+      const rute = document.getElementById('rute').value;
+      const kelas = document.getElementById('kelas').value;
+      const jumlah = document.getElementById('jumlah').value;
+      const tanggal = document.getElementById('tanggal').value;
+
+      const baris = document.querySelector('#tabelTiket tbody').insertRow();
+
+      baris.insertCell(0).innerHTML = nama;
+      baris.insertCell(1).innerHTML = rute;
+      baris.insertCell(2).innerHTML = kelas;
+      baris.insertCell(3).innerHTML = jumlah;
+      baris.insertCell(4).innerHTML = tanggal;
+
+      formTiket.reset();
+    });
+  </script>
+
+</body>
+</html>
